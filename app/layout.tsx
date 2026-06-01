@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -32,7 +33,9 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-full overflow-x-hidden bg-background text-foreground"
       >
-        <Navbar>{children}</Navbar>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Navbar>{children}</Navbar>
+        </Suspense>
       </body>
     </html>
   );

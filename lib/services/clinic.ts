@@ -703,10 +703,11 @@ async function persistSaleStockAndRecord(
   saleId?: string
 ) {
   const discountPercent = Math.min(Math.max(Number(payload.discountPercent || 0), 0), 100);
+  const items = payload.items || [];
   const { saleItems, grossAmount, discountAmount, totalAmount, cgstTotal, sgstTotal, medicines } =
-    await buildSaleItemSnapshots(tenantId, payload.items, discountPercent);
+    await buildSaleItemSnapshots(tenantId, items, discountPercent);
 
-  const aggregatedItems = aggregateSaleItems(payload.items);
+  const aggregatedItems = aggregateSaleItems(items);
   for (const [medicineId, quantity] of aggregatedItems.entries()) {
     const medicine = medicines.get(medicineId);
     if (!medicine) {
@@ -744,8 +745,8 @@ async function persistSaleStockAndRecord(
             cgstTotal,
             sgstTotal,
             totalAmount,
-            customerName: payload.customerName,
-            customerPhone: payload.customerPhone,
+            customerName: payload.patientName,
+            customerPhone: payload.patientPhone || '',
             doctorName: payload.doctorName,
             paymentMethod: payload.paymentMethod,
             notes: payload.notes,
@@ -765,8 +766,8 @@ async function persistSaleStockAndRecord(
         cgstTotal,
         sgstTotal,
         totalAmount,
-        customerName: payload.customerName,
-        customerPhone: payload.customerPhone,
+        customerName: payload.patientName,
+        customerPhone: payload.patientPhone || '',
         doctorName: payload.doctorName,
         paymentMethod: payload.paymentMethod,
         staffId: actorUserId,

@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
       if (auth.role === 'doctor') {
         // find doctor record for this user
-        const doctor = await Doctor.findOne({ userId: auth.userId, tenantId: auth.tenantId }).lean();
+        const doctor = await Doctor.findOne({ userId: auth.userId, tenantId: auth.tenantId }).lean() as { _id: any } | null;
         if (!doctor) return NextResponse.json({ error: 'Doctor profile not found' }, { status: 404 });
 
         const reports = await Report.find({ tenantId: auth.tenantId, doctorId: doctor._id })
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       }
 
       if (auth.role === 'patient') {
-        const patient = await Patient.findOne({ userId: auth.userId, tenantId: auth.tenantId }).lean();
+        const patient = await Patient.findOne({ userId: auth.userId, tenantId: auth.tenantId }).lean() as { _id: any } | null;
         if (!patient) return NextResponse.json({ error: 'Patient profile not found' }, { status: 404 });
 
         const reports = await Report.find({ tenantId: auth.tenantId, patientId: patient._id })
